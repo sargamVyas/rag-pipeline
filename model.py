@@ -77,8 +77,14 @@ def extract_text_from_html(html):
 
     return " ".join(parser.get_text().split())
 
-# Step 4 - normalize_text (not yet solved)
-# TODO: implement
+# Step 4 - normalize_text
+import unicodedata
+
+def normalize_text(text):
+    # TODO: NFKC-normalize the text and collapse runs of whitespace into single spaces.
+    norm = unicodedata.normalize('NFKC', text)
+
+    return " ".join(norm.split())
 
 # Step 5 - make_document (not yet solved)
 # TODO: implement

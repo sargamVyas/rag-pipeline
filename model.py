@@ -91,8 +91,23 @@ def make_document(text, source, title):
     # TODO: wrap text with source and title metadata into a document dict.
     return {'text': text, 'source':source, 'title': title}
 
-# Step 6 - chunk_fixed_size (not yet solved)
-# TODO: implement
+# Step 6 - chunk_fixed_size
+def chunk_fixed_size(text, chunk_size):
+    # TODO: split text into consecutive non-overlapping chunks of length chunk_size
+    if chunk_size <= 0:
+        raise ValueError('chunk_size must be a positive integer')
+    
+    if not text:
+        return []
+
+    chunks = []
+    i = 0
+
+    while i< len(text):
+        chunks.append(text[i: i+chunk_size])
+        i += chunk_size
+
+    return chunks
 
 # Step 7 - chunk_by_tokens (not yet solved)
 # TODO: implement

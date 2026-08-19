@@ -16,8 +16,18 @@ def load_text_file(path):
 
     return content
 
-# Step 2 - load_text_directory (not yet solved)
-# TODO: implement
+# Step 2 - load_text_directory
+import os
+
+def load_text_directory(directory):
+    all_content = []
+
+    for filename in sorted(os.listdir(directory)):
+        if filename.endswith(".txt"):
+            filepath = os.path.join(directory, filename)
+            all_content.append(load_text_file(filepath))
+
+    return all_content
 
 # Step 3 - extract_text_from_html (not yet solved)
 # TODO: implement

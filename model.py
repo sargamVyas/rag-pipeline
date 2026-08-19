@@ -29,8 +29,53 @@ def load_text_directory(directory):
 
     return all_content
 
-# Step 3 - extract_text_from_html (not yet solved)
-# TODO: implement
+# Step 3 - extract_text_from_html
+from html.parser import HTMLParser
+
+
+class _VisibleTextExtractor(HTMLParser):
+    # Tags whose entire subtree (including their text) must not appear in output.
+    SKIP_TAGS = {"script", "style", "head", "title", "noscript", "template"}
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self._chunks = []
+        self._skip_depth = 0  # >0 means we're inside a tag whose contents we skip
+
+    def handle_starttag(self, tag, attrs):
+        if tag in self.SKIP_TAGS:
+            self._skip_depth += 1
+
+    def handle_endtag(self, tag):
+        if tag in self.SKIP_TAGS and self._skip_depth > 0:
+            self._skip_depth -= 1
+
+    def handle_data(self, data):
+        if self._skip_depth == 0:
+            self._chunks.append(data)
+
+    def get_text(self):
+        return "".join(self._chunks)
+
+
+def extract_text_from_html(html):
+    """Extract visible text content from an HTML string.
+
+    - Strips all tags.
+    - Skips contents of non-visible elements (script, style, head, title,
+      noscript, template).
+    - Decodes HTML entities (&amp; -> &, &#39; -> ', etc.) via HTMLParser's
+      built-in charref/entityref handling.
+    - Collapses whitespace left behind by removed tags/newlines.
+    """
+    if not html:
+        return ""
+
+    parser = _VisibleTextExtractor()
+    parser.feed(html)
+    parser.close()
+
+    return " ".join(parser.get_text().split())
 
 # Step 4 - normalize_text (not yet solved)
 # TODO: implement

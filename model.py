@@ -109,8 +109,27 @@ def chunk_fixed_size(text, chunk_size):
 
     return chunks
 
-# Step 7 - chunk_by_tokens (not yet solved)
-# TODO: implement
+# Step 7 - chunk_by_tokens
+def chunk_by_tokens(text, tokenizer, max_tokens):
+    # TODO: split text into chunks of at most max_tokens token ids using the tokenizer
+        if max_tokens <= 0:
+            raise ValueError("max_tokens must be a positive integer")
+
+        if not text:
+            return []
+        
+        token_ids = tokenizer.encode(text, add_special_token=False)
+
+        if not token_ids:
+            return []
+
+        chunks = []
+
+        for i in range(0, len(token_ids), max_tokens):
+            piece_ids = token_ids[i:i + max_tokens]
+            chunks.append(tokenizer.decode(piece_ids, skip_special_tokens=True))
+
+        return chunks
 
 # Step 8 - chunk_by_sentences (not yet solved)
 # TODO: implement

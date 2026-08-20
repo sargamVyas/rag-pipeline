@@ -131,8 +131,37 @@ def chunk_by_tokens(text, tokenizer, max_tokens):
 
         return chunks
 
-# Step 8 - chunk_by_sentences (not yet solved)
-# TODO: implement
+# Step 8 - chunk_by_sentences
+import re
+
+def chunk_by_sentences(text, max_chars):
+    if max_chars <= 0:
+        raise ValueError("max_chars must be a positive integer")
+
+    if not text or not text.strip():
+        return []
+
+    sentences = re.split(r'(?<=[.?!])\s+', text.strip())
+    sentences = [s for s in sentences if s]  # guard against stray empties
+
+    chunks = []
+    current = ""
+
+    for sentence in sentences:
+        if not current:
+            # starting a new chunk; a single long sentence becomes its own chunk
+            current = sentence
+        elif len(current) + 1 + len(sentence) <= max_chars:
+            # +1 accounts for the joining space
+            current = current + " " + sentence
+        else:
+            chunks.append(current)
+            current = sentence
+
+    if current:
+        chunks.append(current)
+
+    return chunks
 
 # Step 9 - chunk_with_overlap (not yet solved)
 # TODO: implement

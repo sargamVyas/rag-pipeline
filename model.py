@@ -218,20 +218,14 @@ def embed_chunks(model, chunks, batch_size=32):
     if not chunks:
         dim = model.get_sentence_embedding_dimension()
         return np.empty((0, dim), dtype=np.float32)
-    
-    text = [
-        chunk['text'] if isinstance(chunk, dict) else chunk
+
+    texts = [
+        chunk["text"] if isinstance(chunk, dict) else chunk
         for chunk in chunks
     ]
 
-    batch_embedding = []
-
-    for i in range(0, len(text), batch_size):
-        batch = text[i:i+batch_size]
-        emb = model.encode(batch)
-        batch_embedding.append(np.asarray(emb, dtype=np.float32))
-
-    return np.vstack(batch_embedding)
+    embeddings = model.encode(texts, batch_size=batch_size)
+    return np.asarray(embeddings, dtype=np.float32)
 
 # Step 14 - l2_normalize (not yet solved)
 # TODO: implement
